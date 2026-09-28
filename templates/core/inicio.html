@@ -1,13 +1,19 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block contenido %}
 <section class="portada">
-  <div class="contenedor portada-texto">
-    <h1>Trajes típicos y de gala para tu presentación</h1>
-    <p>Alquila el traje completo o solo las prendas que necesitas. Retiro en el local.</p>
-    <div class="acciones">
-      <a href="#regiones" class="boton boton-maiz">Ver catálogo</a>
-      <a href="#contacto" class="boton boton-contorno-claro">Reservar ensayo</a>
+  <div class="contenedor portada-fila">
+    <div class="portada-texto">
+      <h1>Trajes típicos y de gala para tu presentación</h1>
+      <p>Alquila el traje completo o solo las prendas que necesitas. Retiro en el local.</p>
+      <div class="acciones">
+        <a href="#regiones" class="boton boton-maiz">Ver catálogo</a>
+        <a href="#contacto" class="boton boton-contorno-claro">Reservar ensayo</a>
+      </div>
+    </div>
+    <div class="portada-imagen">
+      <img src="{% static 'img/portada.jpg' %}" alt="Grupo de danza con trajes típicos" onerror="this.parentElement.remove()">
     </div>
   </div>
 </section>
