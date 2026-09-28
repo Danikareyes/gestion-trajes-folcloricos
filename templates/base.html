@@ -1,0 +1,44 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Trajes típicos y de gala{% endblock %} · {{ NOMBRE_NEGOCIO }}</title>
+  <meta name="description" content="{% block descripcion %}Alquiler de trajes típicos de Costa, Sierra y Oriente, y vestidos para certámenes.{% endblock %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/sitio.css' %}">
+</head>
+<body>
+  <header class="encabezado">
+    <div class="contenedor encabezado-fila">
+      <a href="{% url 'core:inicio' %}" class="marca">
+        <img src="{% static 'img/logo.png' %}" alt="" class="marca-logo" onerror="this.remove()">
+        <span class="marca-nombre">{{ NOMBRE_NEGOCIO }}</span>
+      </a>
+      <nav class="menu" aria-label="Principal">
+        <a href="{% url 'core:inicio' %}#regiones">Catálogo</a>
+        <a href="{% url 'core:inicio' %}#eventos">Eventos</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    {% block contenido %}{% endblock %}
+  </main>
+
+  <footer class="pie" id="contacto">
+    <div class="contenedor pie-fila">
+      <div>
+        <p class="pie-nombre">{{ NOMBRE_NEGOCIO }}</p>
+        <p>Alquiler de trajes típicos y de gala. Retiro y devolución en el local.</p>
+      </div>
+      {% if WHATSAPP_NUMERO %}
+        <a class="boton boton-whatsapp" href="https://wa.me/{{ WHATSAPP_NUMERO }}" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
+      {% endif %}
+    </div>
+  </footer>
+</body>
+</html>

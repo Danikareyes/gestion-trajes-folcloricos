@@ -1,0 +1,87 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Paleta B · Mercado de colores. Se aplica siempre en modo claro para mantener la identidad. */
+  html[data-theme], :root {
+    --primary: #1E40AF;
+    --secondary: #1B2A4A;
+    --accent: #FFC43D;
+    --primary-fg: #FFFFFF;
+
+    --body-fg: #1B2A4A;
+    --body-bg: #FFFFFF;
+    --body-quiet-color: #5B6478;
+    --body-medium-color: #3B4A6B;
+    --body-loud-color: #0F1A33;
+
+    --header-color: #FFE3CC;
+    --header-branding-color: #FFFFFF;
+    --header-bg: #1B2A4A;
+    --header-link-color: #FFFFFF;
+
+    --breadcrumbs-fg: #FFE3CC;
+    --breadcrumbs-link-fg: #FFFFFF;
+    --breadcrumbs-bg: #C2410C;
+
+    --link-fg: #C2410C;
+    --link-hover-color: #9A3412;
+    --link-selected-fg: #9A3412;
+
+    --hairline-color: #F3DFC3;
+    --border-color: #E8D3B5;
+
+    --error-fg: #B91C1C;
+    --message-success-bg: #E3F2E8;
+    --message-warning-bg: #FFF4D6;
+    --message-error-bg: #FDE8E8;
+
+    --darkened-bg: #FFF8EE;
+    --selected-bg: #FFF1E6;
+    --selected-row: #FFF8EE;
+
+    --button-fg: #FFFFFF;
+    --button-bg: #C2410C;
+    --button-hover-bg: #9A3412;
+    --default-button-bg: #1E40AF;
+    --default-button-hover-bg: #1B2A4A;
+    --close-button-bg: #5B6478;
+    --close-button-hover-bg: #3B4A6B;
+    --delete-button-bg: #B91C1C;
+    --delete-button-hover-bg: #991B1B;
+
+    --object-tools-fg: #FFFFFF;
+    --object-tools-bg: #1E40AF;
+    --object-tools-hover-bg: #1B2A4A;
+
+    --font-family-primary: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    color-scheme: light;
+  }
+
+  /* El panel siempre usa la paleta clara: se oculta el botón de modo oscuro */
+  .theme-toggle { display: none; }
+
+  #header { border-bottom: 4px solid #FFC43D; }
+  #site-name a { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; }
+  #site-name img { height: 34px; width: auto; }
+  .module h2, .module caption, .inline-group h2 { background: #1E40AF; }
+  #content-related .module h2 { background: #1B2A4A; }
+</style>
+{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+  <a href="{% url 'admin:index' %}">
+    <img src="{% static 'img/logo.png' %}" alt="" onerror="this.remove()">
+    {{ site_header|default:_('Django administration') }}
+  </a>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

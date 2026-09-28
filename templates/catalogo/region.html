@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ region.nombre }}{% endblock %}
+
+{% block contenido %}
+<section class="banda-region region-{{ region.slug }}">
+  <div class="contenedor">
+    <p class="migas"><a href="{% url 'core:inicio' %}">Inicio</a> › Catálogo</p>
+    <h1>{{ region.nombre }}</h1>
+    <nav class="pestanas" aria-label="Tipo de catálogo">
+      <a href="?vista=trajes" class="pestana {% if vista == 'trajes' %}activa{% endif %}">Trajes completos</a>
+      <a href="?vista=prendas" class="pestana {% if vista == 'prendas' %}activa{% endif %}">Prendas individuales</a>
+    </nav>
+  </div>
+</section>
+
+<div class="contenedor seccion">
+{% if vista == "trajes" %}
+
+  <form method="get" class="filtros">
+    <input type="hidden" name="vista" value="trajes">
+    <label>Localidad
+      <select name="localidad">
+        <option value="">Todas</option>
+        {% for l in localidades %}
+          <option value="{{ l.slug }}" {% if l.slug == localidad_activa %}selected{% endif %}>{{ l.nombre }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Género
+      <select name="genero">
+        <option value="">Todos</option>
+        {% for valor, nombre in generos %}
+          <option value="{{ valor }}" {% if valor == genero_activo %}selected{% endif %}>{{ nombre }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button type="submit" class="boton boton-azul">Filtrar</button>
+  </form>
+
+  {% if trajes %}
+    <div class="rejilla-productos">
+      {% for t in trajes %}
+        <a href="{% url 'catalogo:traje' t.slug %}" class="tarjeta">
+          {% if t.portada %}
+            <img src="{{ t.portada.url }}" alt="{{ t.nombre }}" class="tarjeta-foto" loading="lazy">
+          {% else %}
+            <div class="tarjeta-foto sin-foto">Foto pendiente</div>
+          {% endif %}
+          <div class="tarjeta-cuerpo">
+            <span class="tarjeta-titulo">{{ t.nombre }}</span>
+            <span class="tarjeta-detalle">{{ t.localidad.nombre }} · {{ t.generos }}</span>
+            {% if t.precio_desde %}<span class="precio">Desde ${{ t.precio_desde }}</span>{% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="vacio">No hay trajes con esos filtros.</p>
+  {% endif %}
+
+{% else %}
+
+  {% if tipos %}
+    <p class="etiqueta">¿Qué prenda buscas?</p>
+    <div class="chips">
+      {% for t in tipos %}
+        <a href="?vista=prendas&tipo={{ t.slug }}" class="chip {% if t == tipo_activo %}activo{% endif %}">{{ t.nombre }}</a>
+      {% endfor %}
+    </div>
+
+    <h2>{{ tipo_activo.nombre }} · {{ region.nombre }}</h2>
+    <div class="rejilla-productos">
+      {% for d in disenos %}
+        <article class="tarjeta">
+          {% if d.foto %}
+            <img src="{{ d.foto.url }}" alt="{{ d.prenda.nombre }} {{ d.nombre }}" class="tarjeta-foto" loading="lazy">
+          {% else %}
+            <div class="tarjeta-foto sin-foto">Foto pendiente</div>
+          {% endif %}
+          <div class="tarjeta-cuerpo">
+            <span class="tarjeta-titulo">{{ d.prenda.nombre }} · {{ d.nombre }}</span>
+            <span class="tarjeta-detalle">{{ d.prenda.variante.modelo.localidad.nombre }} · {{ d.prenda.variante.get_genero_display }}</span>
+            <span class="precio">${{ d.prenda.precio_individual }}</span>
+            <button type="button" class="boton boton-naranja" disabled title="Disponible en la siguiente entrega">Agregar a mi reserva</button>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="vacio">Aún no hay prendas individuales con foto en esta región.</p>
+  {% endif %}
+
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,140 @@
+/* Paleta B · Mercado de colores */
+:root {
+  --naranja: #C2410C;
+  --naranja-oscuro: #9A3412;
+  --azul: #1E40AF;
+  --maiz: #FFC43D;
+  --marino: #1B2A4A;
+  --fondo: #FFF8EE;
+  --blanco: #FFFFFF;
+  --borde: #F3DFC3;
+  --borde-campo: #E8D3B5;
+  --texto-suave: #5B6478;
+  --foto-vacia: #FBE7D3;
+  --verde: #15803D;
+  --costa: #0369A1;
+  --sierra: #C2410C;
+  --oriente: #15803D;
+  --certamenes: #7E22CE;
+  --radio: 14px;
+  --titulos: "Fraunces", Georgia, serif;
+  --texto: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fondo); color: var(--marino); font-family: var(--texto); line-height: 1.5; }
+img { max-width: 100%; display: block; }
+a { color: var(--naranja); }
+a:hover { color: var(--naranja-oscuro); }
+h1, h2 { font-family: var(--titulos); line-height: 1.15; margin: 0 0 12px; }
+h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); }
+h2 { font-size: clamp(1.25rem, 3.5vw, 1.6rem); }
+
+.contenedor { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+.seccion { padding-top: 28px; padding-bottom: 28px; }
+.vacio, .nota { color: var(--texto-suave); }
+.nota { font-size: .85rem; }
+
+/* Encabezado */
+.encabezado { background: var(--blanco); border-bottom: 3px solid var(--naranja); position: sticky; top: 0; z-index: 10; }
+.encabezado-fila { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 68px; flex-wrap: wrap; }
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--marino); }
+.marca-logo { height: 44px; width: auto; }
+.marca-nombre { font-family: var(--titulos); font-weight: 700; font-size: 1.1rem; }
+.menu { display: flex; gap: 4px; }
+.menu a { color: var(--marino); text-decoration: none; font-weight: 500; padding: 10px 12px; border-radius: 22px; }
+.menu a:hover { background: var(--fondo); }
+
+/* Botones */
+.boton { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 20px;
+  border-radius: 23px; border: none; font: 600 .95rem var(--texto); text-decoration: none; cursor: pointer; }
+.boton:disabled { opacity: .55; cursor: not-allowed; }
+.boton-naranja { background: var(--naranja); color: var(--blanco); }
+.boton-naranja:hover { background: var(--naranja-oscuro); color: var(--blanco); }
+.boton-azul { background: var(--azul); color: var(--blanco); }
+.boton-maiz { background: var(--maiz); color: var(--marino); }
+.boton-maiz:hover { color: var(--marino); filter: brightness(.95); }
+.boton-contorno-claro { border: 1.5px solid var(--blanco); color: var(--blanco); }
+.boton-contorno-claro:hover { color: var(--blanco); background: rgba(255, 255, 255, .12); }
+.boton-whatsapp { background: var(--verde); color: var(--blanco); }
+.boton-whatsapp:hover { color: var(--blanco); filter: brightness(.95); }
+.boton-ancho { width: 100%; }
+
+/* Portada */
+.portada { background: var(--azul); color: var(--blanco); padding: 48px 0; }
+.portada-texto { max-width: 760px; margin-left: auto; margin-right: auto; }
+.portada p { color: #DCE4FA; font-size: 1.05rem; }
+.acciones { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Regiones */
+.rejilla-regiones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tarjeta-region { min-height: 88px; border-radius: var(--radio); padding: 14px; color: var(--blanco); text-decoration: none;
+  display: flex; flex-direction: column; justify-content: space-between; background: var(--marino); }
+.tarjeta-region:hover { color: var(--blanco); filter: brightness(1.08); }
+.tarjeta-region-nombre { font-weight: 600; font-size: 1.1rem; }
+.tarjeta-region-detalle { font-size: .8rem; opacity: .9; }
+.banda-region { background: var(--marino); }
+.region-costa { background: var(--costa); }
+.region-sierra { background: var(--sierra); }
+.region-oriente { background: var(--oriente); }
+.region-certamenes-y-reinas, .region-certamenes { background: var(--certamenes); }
+
+/* Banda de región y pestañas */
+.banda-region { color: var(--blanco); padding-top: 18px; }
+.banda-region h1 { margin-bottom: 8px; }
+.migas { font-size: .85rem; margin: 0 0 4px; }
+.banda-region .migas, .banda-region .migas a { color: #FFE3CC; }
+.pestanas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 480px; }
+.pestana { color: #FFE3CC; text-decoration: none; text-align: center; padding: 12px 8px; border-bottom: 4px solid transparent; }
+.pestana:hover { color: var(--blanco); }
+.pestana.activa { color: var(--blanco); font-weight: 600; border-bottom-color: var(--maiz); }
+
+/* Filtros y chips */
+.filtros { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 20px; }
+.filtros label, .etiqueta { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 600; color: var(--texto-suave); }
+.filtros select { min-height: 44px; min-width: 150px; border: 1px solid var(--borde-campo); border-radius: 10px; padding: 0 10px;
+  background: var(--blanco); color: var(--marino); font: 1rem var(--texto); }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 18px; }
+.chip { white-space: nowrap; min-height: 40px; display: inline-flex; align-items: center; padding: 0 16px; border-radius: 20px;
+  border: 1px solid var(--borde-campo); background: var(--blanco); color: var(--marino); text-decoration: none; }
+.chip.activo { background: var(--azul); border-color: var(--azul); color: var(--blanco); font-weight: 600; }
+
+/* Tarjetas de producto */
+.rejilla-productos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tarjeta { background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--radio); overflow: hidden;
+  display: flex; flex-direction: column; text-decoration: none; color: var(--marino); }
+a.tarjeta:hover { border-color: var(--naranja); color: var(--marino); }
+.tarjeta-foto { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+.sin-foto { background: var(--foto-vacia); display: flex; align-items: center; justify-content: center; color: #7A5A3A; font-size: .85rem; }
+.tarjeta-cuerpo { padding: 12px; display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
+.tarjeta-cuerpo .boton { margin-top: auto; min-height: 40px; font-size: .85rem; padding: 0 12px; }
+.tarjeta-titulo { font-weight: 600; }
+.tarjeta-detalle { font-size: .85rem; color: var(--texto-suave); }
+.precio { font-weight: 600; color: var(--naranja); }
+
+/* Ficha del traje */
+.ficha { display: grid; gap: 24px; }
+.ficha-foto { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radio); }
+.selector-genero { display: inline-grid; grid-auto-flow: column; background: #F7E6CF; border-radius: 24px; padding: 4px; margin-bottom: 16px; }
+.selector-genero a { padding: 10px 22px; border-radius: 20px; color: var(--marino); text-decoration: none; }
+.selector-genero a.activo { background: var(--blanco); font-weight: 600; }
+.caja-precio { background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--radio); padding: 16px; margin-bottom: 20px; }
+.caja-precio-fila { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.precio-grande { font-family: var(--titulos); font-size: 2rem; font-weight: 700; color: var(--naranja); }
+.regalo { color: var(--verde); font-weight: 600; margin: 6px 0 0; }
+.lista-prendas { background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--radio); padding: 14px 16px; }
+.enlace-flecha { display: inline-block; margin-top: 16px; font-weight: 600; }
+
+/* Pie */
+.pie { background: var(--marino); color: #C9D2E6; margin-top: 40px; padding: 28px 0; }
+.pie-fila { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.pie-nombre { font-family: var(--titulos); color: var(--blanco); font-size: 1.15rem; margin: 0 0 4px; }
+.pie p { margin: 0; }
+
+/* Escritorio */
+@media (min-width: 768px) {
+  .rejilla-regiones { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .rejilla-productos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .ficha { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .portada { padding: 72px 0; }
+}

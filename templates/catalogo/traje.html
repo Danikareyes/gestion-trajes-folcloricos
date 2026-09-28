@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ modelo.nombre }}{% endblock %}
+
+{% block contenido %}
+<div class="contenedor seccion ficha">
+  <div class="ficha-galeria">
+    {% if variante and variante.foto_principal %}
+      <img src="{{ variante.foto_principal.url }}" alt="{{ modelo.nombre }} · {{ variante.get_genero_display }}" class="ficha-foto">
+    {% else %}
+      <div class="ficha-foto sin-foto">Foto pendiente</div>
+    {% endif %}
+  </div>
+
+  <div class="ficha-info">
+    <p class="migas">
+      <a href="{% url 'core:inicio' %}">Inicio</a> ›
+      <a href="{% url 'catalogo:region' modelo.localidad.region.slug %}">{{ modelo.localidad.region.nombre }}</a> ›
+      {{ modelo.localidad.nombre }}
+    </p>
+    <h1>{{ modelo.nombre }}</h1>
+
+    {% if variantes|length > 1 %}
+      <nav class="selector-genero" aria-label="Género">
+        {% for v in variantes %}
+          <a href="?genero={{ v.genero }}" class="{% if v == variante %}activo{% endif %}">{{ v.get_genero_display }}</a>
+        {% endfor %}
+      </nav>
+    {% endif %}
+
+    {% if variante %}
+      <div class="caja-precio">
+        <div class="caja-precio-fila">
+          <span>Traje completo, por evento</span>
+          <span class="precio-grande">${{ variante.precio_completo }}</span>
+        </div>
+        {% if regalos %}
+          <p class="regalo">Incluye {% for r in regalos %}{{ r.nombre|lower }}{% if not forloop.last %} y {% endif %}{% endfor %} sin costo</p>
+        {% endif %}
+      </div>
+
+      <h2>Este traje incluye</h2>
+      <p class="lista-prendas">
+        {% for p in prendas %}{{ p.nombre }}{% if not forloop.last %} · {% endif %}{% endfor %}
+      </p>
+
+      {% if WHATSAPP_NUMERO %}
+        <a class="boton boton-naranja boton-ancho" href="https://wa.me/{{ WHATSAPP_NUMERO }}?text={{ whatsapp_texto }}" target="_blank" rel="noopener">Consultar disponibilidad por WhatsApp</a>
+      {% endif %}
+      <p class="nota">La reserva en línea con fecha y talla estará disponible en la siguiente entrega.</p>
+
+      {% if not modelo.solo_completo %}
+        <a href="{% url 'catalogo:region' modelo.localidad.region.slug %}?vista=prendas" class="enlace-flecha">¿Solo necesitas una prenda? Ver prendas individuales →</a>
+      {% endif %}
+    {% else %}
+      <p class="vacio">Este traje aún no tiene precios cargados.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

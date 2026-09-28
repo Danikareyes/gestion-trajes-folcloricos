@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<section class="portada">
+  <div class="contenedor portada-texto">
+    <h1>Trajes típicos y de gala para tu presentación</h1>
+    <p>Alquila el traje completo o solo las prendas que necesitas. Retiro en el local.</p>
+    <div class="acciones">
+      <a href="#regiones" class="boton boton-maiz">Ver catálogo</a>
+      <a href="#contacto" class="boton boton-contorno-claro">Reservar ensayo</a>
+    </div>
+  </div>
+</section>
+
+<section class="contenedor seccion" id="regiones">
+  <h2>Explora por región</h2>
+  {% if regiones %}
+    <div class="rejilla-regiones">
+      {% for r in regiones %}
+        <a href="{% url 'catalogo:region' r.slug %}" class="tarjeta-region region-{{ r.slug }}">
+          <span class="tarjeta-region-nombre">{{ r.nombre }}</span>
+          <span class="tarjeta-region-detalle">Trajes y prendas</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="vacio">Aún no hay regiones cargadas. Créalas desde el panel de administración.</p>
+  {% endif %}
+</section>
+
+<section class="contenedor seccion" id="eventos">
+  <h2>Eventos y logros</h2>
+  <p class="vacio">Muy pronto: presentaciones, certámenes y premios con nuestros trajes.</p>
+</section>
+{% endblock %}
