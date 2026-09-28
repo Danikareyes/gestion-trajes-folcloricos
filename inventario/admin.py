@@ -63,15 +63,15 @@ class HistorialEstadoInline(admin.TabularInline):
 @admin.register(UnidadInventario)
 class UnidadInventarioAdmin(admin.ModelAdmin):
     form = UnidadInventarioForm
-    list_display = ["codigo", "prenda_nombre", "modelo", "talla", "estado_color", "condicion", "ubicacion"]
-    list_filter = ["estado", "talla", "condicion", "prenda__variante__modelo__localidad__region",
+    list_display = ["codigo", "prenda_nombre", "diseno", "modelo", "talla", "estado_color", "condicion", "ubicacion"]
+    list_filter = ["estado", "talla", "condicion", "prenda__tipo_prenda", "prenda__variante__modelo__localidad__region",
                    "prenda__variante__modelo"]
-    search_fields = ["codigo", "prenda__nombre", "prenda__variante__modelo__nombre"]
-    autocomplete_fields = ["prenda"]
+    search_fields = ["codigo", "prenda__nombre", "diseno__nombre", "prenda__variante__modelo__nombre"]
+    autocomplete_fields = ["prenda", "diseno"]
     readonly_fields = ["veces_alquilada"]
     inlines = [HistorialEstadoInline]
     fieldsets = [
-        (None, {"fields": ["prenda", "codigo", "talla", "condicion", "ubicacion"]}),
+        (None, {"fields": ["prenda", "diseno", "codigo", "talla", "condicion", "ubicacion"]}),
         ("Estado", {"fields": ["estado", "motivo_cambio"]}),
         ("Compra y notas", {"classes": ["collapse"],
                             "fields": ["fecha_adquisicion", "costo_adquisicion", "veces_alquilada", "notas"]}),
@@ -102,5 +102,3 @@ class UnidadInventarioAdmin(admin.ModelAdmin):
         elif anterior != obj.estado:
             HistorialEstado.objects.create(unidad=obj, estado_anterior=anterior, estado_nuevo=obj.estado,
                                            motivo=form.cleaned_data["motivo_cambio"], usuario=request.user)
-
-

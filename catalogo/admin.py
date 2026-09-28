@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .models import Localidad, ModeloTraje, Prenda, Region, VarianteGenero
+from .models import DisenoPrenda, Localidad, ModeloTraje, Prenda, Region, TipoPrenda, VarianteGenero
 
 
 @admin.register(Region)
@@ -27,8 +27,7 @@ class LocalidadAdmin(admin.ModelAdmin):
 class VarianteGeneroInline(admin.TabularInline):
     model = VarianteGenero
     extra = 1
-    fields = ["genero", "precio_completo", "garantia_completo", "dias_buffer_lavado", "foto_principal",
-              "editar_prendas"]
+    fields = ["genero", "precio_completo", "garantia_completo", "dias_buffer_lavado", "foto_principal", "editar_prendas"]
     readonly_fields = ["editar_prendas"]
 
     @admin.display(description="prendas")
@@ -54,11 +53,27 @@ class ModeloTrajeAdmin(admin.ModelAdmin):
         return obj.localidad.region
 
 
+@admin.register(TipoPrenda)
+class TipoPrendaAdmin(admin.ModelAdmin):
+    list_display = ["nombre", "orden"]
+    list_editable = ["orden"]
+    prepopulated_fields = {"slug": ["nombre"]}
+    search_fields = ["nombre"]
+
+
 class PrendaInline(admin.TabularInline):
     model = Prenda
     extra = 3
-    fields = ["nombre", "tipo", "precio_individual", "garantia_individual",
-              "incluida_sin_costo", "cantidad_por_traje", "foto"]
+    fields = ["nombre", "tipo_prenda", "tipo", "precio_individual", "garantia_individual",
+              "incluida_sin_costo", "cantidad_por_traje", "foto", "editar_disenos"]
+    readonly_fields = ["editar_disenos"]
+
+    @admin.display(description="diseños")
+    def editar_disenos(self, obj):
+        if not obj.pk:
+            return "Guarda primero"
+        url = reverse("admin:catalogo_prenda_change", args=[obj.pk])
+        return format_html('<a href="{}">Diseños y fotos ({})</a>', url, obj.disenos.count())
 
 
 @admin.register(VarianteGenero)
@@ -80,10 +95,33 @@ class VarianteGeneroAdmin(admin.ModelAdmin):
         return obj.prendas.count()
 
 
+class DisenoPrendaInline(admin.TabularInline):
+    model = DisenoPrenda
+    extra = 3
+    fields = ["nombre", "foto", "vista_previa", "activo"]
+    readonly_fields = ["vista_previa"]
+
+    @admin.display(description="vista previa")
+    def vista_previa(self, obj):
+        if obj.pk and obj.foto:
+            return format_html('<img src="{}" style="height:60px;border-radius:6px">', obj.foto.url)
+        return "—"
+
+
 @admin.register(Prenda)
 class PrendaAdmin(admin.ModelAdmin):
-    list_display = ["nombre", "variante", "tipo", "precio_individual", "incluida_sin_costo"]
-    list_filter = ["tipo", "incluida_sin_costo", "variante__modelo__localidad__region"]
+    list_display = ["nombre", "tipo_prenda", "variante", "precio_individual", "total_disenos", "incluida_sin_costo"]
+    list_filter = ["tipo_prenda", "tipo", "incluida_sin_costo", "variante__modelo__localidad__region"]
     search_fields = ["nombre", "variante__modelo__nombre"]
+    inlines = [DisenoPrendaInline]
+
+    @admin.display(description="n.º diseños")
+    def total_disenos(self, obj):
+        return obj.disenos.count()
 
 
+@admin.register(DisenoPrenda)
+class DisenoPrendaAdmin(admin.ModelAdmin):
+    list_display = ["nombre", "prenda", "activo"]
+    list_filter = ["activo", "prenda__tipo_prenda", "prenda__variante__modelo__localidad__region"]
+    search_fields = ["nombre", "prenda__nombre", "prenda__variante__modelo__nombre"]

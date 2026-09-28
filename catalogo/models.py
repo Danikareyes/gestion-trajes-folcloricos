@@ -113,12 +113,35 @@ class VarianteGenero(models.Model):
         return sum((p.precio_individual * p.cantidad_por_traje for p in self.prendas.all()), Decimal("0"))
 
 
+class TipoPrenda(models.Model):
+    nombre = models.CharField(max_length=40, unique=True, help_text="Ej.: Blusa, Pollera, Sombrero, Poncho")
+    slug = models.SlugField(max_length=50, unique=True, blank=True)
+    orden = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ["orden", "nombre"]
+        verbose_name = "tipo de prenda"
+        verbose_name_plural = "tipos de prenda"
+
+    def __str__(self):
+        return self.nombre
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.nombre)
+        super().save(*args, **kwargs)
+
+
 class Prenda(models.Model):
     class Tipo(models.TextChoices):
         PRENDA = "prenda", "Prenda"
         ACCESORIO = "accesorio", "Accesorio"
 
     variante = models.ForeignKey(VarianteGenero, on_delete=models.CASCADE, related_name="prendas")
+    tipo_prenda = models.ForeignKey(
+        TipoPrenda, on_delete=models.PROTECT, related_name="prendas", null=True,
+        verbose_name="tipo de prenda", help_text="Agrupa la prenda en la pestaña Prendas individuales",
+    )
     nombre = models.CharField(max_length=60, help_text="Ej.: Pollera, Poncho, Collar")
     tipo = models.CharField(max_length=10, choices=Tipo.choices, default=Tipo.PRENDA)
     precio_individual = models.DecimalField("precio individual", **PRECIO)
@@ -139,3 +162,19 @@ class Prenda(models.Model):
         return f"{self.nombre} — {self.variante}"
 
 
+class DisenoPrenda(models.Model):
+    prenda = models.ForeignKey(Prenda, on_delete=models.CASCADE, related_name="disenos")
+    nombre = models.CharField(
+        "diseño o color", max_length=60, help_text="Ej.: Bordada fucsia, Blanca con encaje"
+    )
+    foto = models.ImageField(upload_to="disenos/", blank=True)
+    activo = models.BooleanField(default=True, help_text="Desmarca para ocultarlo del catálogo")
+
+    class Meta:
+        ordering = ["prenda", "nombre"]
+        verbose_name = "diseño de prenda"
+        verbose_name_plural = "diseños de prenda"
+        constraints = [models.UniqueConstraint(fields=["prenda", "nombre"], name="diseno_unico_por_prenda")]
+
+    def __str__(self):
+        return f"{self.prenda.nombre} {self.nombre} — {self.prenda.variante}"

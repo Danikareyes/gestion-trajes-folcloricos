@@ -1,8 +1,9 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
 
-from catalogo.models import Prenda
+from catalogo.models import DisenoPrenda, Prenda
 
 
 class UnidadInventario(models.Model):
@@ -47,6 +48,10 @@ class UnidadInventario(models.Model):
     }
 
     prenda = models.ForeignKey(Prenda, on_delete=models.PROTECT, related_name="unidades")
+    diseno = models.ForeignKey(
+        DisenoPrenda, on_delete=models.PROTECT, related_name="unidades", null=True, blank=True,
+        verbose_name="diseño o color", help_text="Debe ser un diseño de la prenda elegida",
+    )
     codigo = models.CharField(
         "código", max_length=40, unique=True, blank=True,
         help_text="Déjalo vacío y se genera solo (ej.: SIE-CAN-M-POL-M-01)",
@@ -56,8 +61,7 @@ class UnidadInventario(models.Model):
     condicion = models.CharField("condición", max_length=12, choices=Condicion.choices, default=Condicion.BUENO)
     ubicacion = models.CharField("ubicación", max_length=60, blank=True, help_text="Ej.: Percha A3")
     fecha_adquisicion = models.DateField("fecha de adquisición", null=True, blank=True)
-    costo_adquisicion = models.DecimalField("costo de adquisición", max_digits=8, decimal_places=2, null=True,
-                                            blank=True)
+    costo_adquisicion = models.DecimalField("costo de adquisición", max_digits=8, decimal_places=2, null=True, blank=True)
     veces_alquilada = models.PositiveIntegerField(default=0)
     notas = models.TextField(blank=True)
 
@@ -90,6 +94,10 @@ class UnidadInventario(models.Model):
             codigo = f"{prefijo}-{numero:02d}"
         return codigo
 
+    def clean(self):
+        if self.diseno_id and self.prenda_id and self.diseno.prenda_id != self.prenda_id:
+            raise ValidationError({"diseno": "Este diseño pertenece a otra prenda."})
+
     def save(self, *args, **kwargs):
         if not self.codigo:
             self.codigo = self.generar_codigo()
@@ -111,5 +119,3 @@ class HistorialEstado(models.Model):
 
     def __str__(self):
         return f"{self.unidad.codigo}: {self.estado_anterior or '—'} → {self.estado_nuevo}"
-
-
