@@ -1,3 +1,4 @@
+/* Archivo: static/css/sitio.css */
 /* Paleta B · Mercado de colores */
 :root {
   --naranja: #C2410C;
@@ -32,7 +33,8 @@ h1, h2 { font-family: var(--titulos); line-height: 1.15; margin: 0 0 12px; }
 h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); }
 h2 { font-size: clamp(1.25rem, 3.5vw, 1.6rem); }
 
-.contenedor { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+.contenedor { width: 100%; max-width: 1360px; margin: 0 auto; padding: 0 16px; }
+.texto-legible { max-width: 60ch; }
 .seccion { padding-top: 28px; padding-bottom: 28px; }
 .vacio, .nota { color: var(--texto-suave); }
 .nota { font-size: .85rem; }
@@ -65,10 +67,28 @@ h2 { font-size: clamp(1.25rem, 3.5vw, 1.6rem); }
 /* Portada */
 .portada { background: var(--azul); color: var(--blanco); padding: 40px 0; }
 .portada-fila { display: grid; gap: 28px; align-items: center; }
-.portada-texto { max-width: 600px; }
+.portada-texto { max-width: 640px; }
 .portada p { color: #DCE4FA; font-size: 1.05rem; }
 .portada-imagen img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radio); }
 .acciones { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Franja de fotos en movimiento (RF-80) */
+.marquee { background: var(--marino); padding: 14px 0; overflow: hidden; }
+.marquee-pista { display: flex; gap: 12px; width: max-content; animation: desfile var(--duracion, 48s) linear infinite; }
+.marquee:hover .marquee-pista, .marquee:focus-within .marquee-pista { animation-play-state: paused; }
+.marquee-item { flex: 0 0 auto; display: block; border-radius: 12px; overflow: hidden; }
+.marquee-item img { height: 170px; width: auto; aspect-ratio: 3 / 4; object-fit: cover; transition: transform .3s ease; }
+.marquee-item:hover img, .marquee-item:focus-visible img { transform: scale(1.05); }
+.marquee-item:focus-visible { outline: 3px solid var(--maiz); outline-offset: 2px; }
+@keyframes desfile {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 6px)); } /* mitad de la pista más medio espacio: vuelta sin cortes */
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee { overflow-x: auto; }
+  .marquee-pista { animation: none; padding: 0 16px; }
+  .marquee-item.copia { display: none; }
+}
 
 /* Regiones */
 .rejilla-regiones { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
@@ -137,11 +157,15 @@ a.tarjeta:hover { border-color: var(--naranja); color: var(--marino); }
 
 /* Tableta y escritorio */
 @media (min-width: 768px) {
+  .contenedor { padding: 0 32px; }
+  .marquee { padding: 18px 0; }
+  .marquee-item img { height: 240px; }
   .rejilla-regiones { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
   .tarjeta-region { min-height: 140px; padding: 20px; }
   .tarjeta-region-nombre { font-size: 1.4rem; }
   .rejilla-productos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-  .ficha { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 40px; }
+  .ficha { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: start; gap: 48px; }
+  .ficha-foto { max-height: 720px; }
   .portada { padding: 64px 0; }
   .portada-fila:has(.portada-imagen) { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
   .seccion { padding-top: 44px; padding-bottom: 44px; }
@@ -149,4 +173,9 @@ a.tarjeta:hover { border-color: var(--naranja); color: var(--marino); }
 
 @media (min-width: 1024px) {
   .rejilla-productos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1280px) {
+  .rejilla-productos { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .marquee-item img { height: 280px; }
 }

@@ -1,3 +1,4 @@
+{# Archivo: templates/core/inicio.html #}
 {% extends "base.html" %}
 {% load static %}
 
@@ -6,7 +7,7 @@
   <div class="contenedor portada-fila">
     <div class="portada-texto">
       <h1>Trajes típicos y de gala para tu presentación</h1>
-      <p>Alquila el traje completo o solo las prendas que necesitas. Retiro en el local.</p>
+      <p class="texto-legible">Alquila el traje completo o solo las prendas que necesitas. Retiro en el local.</p>
       <div class="acciones">
         <a href="#regiones" class="boton boton-maiz">Ver catálogo</a>
         <a href="#contacto" class="boton boton-contorno-claro">Reservar ensayo</a>
@@ -17,6 +18,24 @@
     </div>
   </div>
 </section>
+
+{% if fotos_marquee %}
+<section class="marquee" aria-label="Algunos de nuestros trajes" style="--duracion: {{ duracion_marquee }}s">
+  <div class="marquee-pista">
+    {% for foto in fotos_marquee %}
+      <a href="{{ foto.enlace }}" class="marquee-item" title="{{ foto.texto }}">
+        <img src="{{ foto.url }}" alt="{{ foto.texto }}">
+      </a>
+    {% endfor %}
+    {# Segunda copia idéntica: permite que la franja gire sin cortes #}
+    {% for foto in fotos_marquee %}
+      <a href="{{ foto.enlace }}" class="marquee-item copia" aria-hidden="true" tabindex="-1">
+        <img src="{{ foto.url }}" alt="">
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 
 <section class="contenedor seccion" id="regiones">
   <h2>Explora por región</h2>
