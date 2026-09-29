@@ -1,0 +1,35 @@
+{# Archivo: templates/alquileres/reserva_enviada.html #}
+{% extends "base.html" %}
+
+{% block titulo %}Reserva enviada{% endblock %}
+
+{% block contenido %}
+<div class="contenedor seccion confirmacion">
+  <p class="estado-ok">¡Recibimos tu reserva!</p>
+  <h1>Código {{ alquiler.codigo }}</h1>
+  <p>Guarda este código. Te escribiremos por WhatsApp cuando validemos tu comprobante.</p>
+
+  <div class="caja">
+    <h2>Qué sigue</h2>
+    <ol class="pasos">
+      <li>Validamos tu comprobante del anticipo (${{ alquiler.anticipo }}).</li>
+      <li>Te confirmamos la reserva por WhatsApp.</li>
+      <li>El <strong>{{ alquiler.fecha_retiro|date:"l d/m/Y" }}</strong> retiras en el local y pagas ${{ alquiler.saldo }} más la garantía de ${{ alquiler.garantia_total }}.</li>
+      <li>El <strong>{{ alquiler.fecha_devolucion|date:"l d/m/Y" }}</strong> devuelves todo y te reintegramos la garantía.</li>
+    </ol>
+  </div>
+
+  <div class="caja">
+    <h2>Tu reserva para el {{ alquiler.fecha_evento|date:"d/m/Y" }}</h2>
+    <ul class="lista-simple">
+      {% for linea in lineas %}<li>{{ linea }}</li>{% endfor %}
+    </ul>
+    <p><strong>Total: ${{ alquiler.total }}</strong></p>
+  </div>
+
+  {% if WHATSAPP_NUMERO %}
+    <a class="boton boton-whatsapp" href="https://wa.me/{{ WHATSAPP_NUMERO }}?text={{ whatsapp_texto }}" target="_blank" rel="noopener">Avisar por WhatsApp</a>
+  {% endif %}
+  <a class="boton boton-azul" href="{% url 'core:inicio' %}">Volver al inicio</a>
+</div>
+{% endblock %}

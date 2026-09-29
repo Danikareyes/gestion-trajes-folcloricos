@@ -1,3 +1,4 @@
+# Archivo: inventario/models.py
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -60,6 +61,10 @@ class UnidadInventario(models.Model):
     estado = models.CharField(max_length=20, choices=Estado.choices, default=Estado.DISPONIBLE)
     condicion = models.CharField("condición", max_length=12, choices=Condicion.choices, default=Condicion.BUENO)
     ubicacion = models.CharField("ubicación", max_length=60, blank=True, help_text="Ej.: Percha A3")
+    busto_cm = models.PositiveSmallIntegerField("busto (cm)", null=True, blank=True)
+    cintura_cm = models.PositiveSmallIntegerField("cintura (cm)", null=True, blank=True)
+    cadera_cm = models.PositiveSmallIntegerField("cadera (cm)", null=True, blank=True)
+    largo_cm = models.PositiveSmallIntegerField("largo (cm)", null=True, blank=True)
     fecha_adquisicion = models.DateField("fecha de adquisición", null=True, blank=True)
     costo_adquisicion = models.DecimalField("costo de adquisición", max_digits=8, decimal_places=2, null=True, blank=True)
     veces_alquilada = models.PositiveIntegerField(default=0)

@@ -1,3 +1,4 @@
+{# Archivo: templates/catalogo/traje.html #}
 {% extends "base.html" %}
 
 {% block titulo %}{{ modelo.nombre }}{% endblock %}
@@ -39,18 +40,41 @@
         {% endif %}
       </div>
 
+      <form method="post" action="{% url 'alquileres:agregar_traje' variante.pk %}" class="formulario-reserva">
+        {% csrf_token %}
+        <div class="campos-fila">
+          <label>{{ form.talla.label }} {{ form.talla }}</label>
+          <label>{{ form.cantidad.label }} {{ form.cantidad }}</label>
+        </div>
+        <label>{{ form.fecha_evento.label }} {{ form.fecha_evento }}</label>
+        <p class="nota">Retiras el día anterior al evento y devuelves el día siguiente. Verificamos la disponibilidad al agregar.</p>
+        <button type="submit" class="boton boton-naranja boton-ancho">Agregar a mi reserva</button>
+      </form>
+
+      {% if medidas %}
+        <h2>Medidas de referencia (cm)</h2>
+        <div class="tabla-desplazable">
+          <table class="tabla-medidas">
+            <thead><tr><th>Talla</th><th>Busto</th><th>Cintura</th><th>Cadera</th><th>Largo</th></tr></thead>
+            <tbody>
+              {% for fila in medidas %}
+                <tr><td>{{ fila.talla }}</td><td>{{ fila.busto }}</td><td>{{ fila.cintura }}</td><td>{{ fila.cadera }}</td><td>{{ fila.largo }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+
       <h2>Este traje incluye</h2>
       <p class="lista-prendas">
         {% for p in prendas %}{{ p.nombre }}{% if not forloop.last %} · {% endif %}{% endfor %}
       </p>
 
       {% if WHATSAPP_NUMERO %}
-        <a class="boton boton-naranja boton-ancho" href="https://wa.me/{{ WHATSAPP_NUMERO }}?text={{ whatsapp_texto }}" target="_blank" rel="noopener">Consultar disponibilidad por WhatsApp</a>
+        <a class="enlace-flecha" href="https://wa.me/{{ WHATSAPP_NUMERO }}?text={{ whatsapp_texto }}" target="_blank" rel="noopener">¿Tienes dudas? Consúltanos por WhatsApp →</a>
       {% endif %}
-      <p class="nota">La reserva en línea con fecha y talla estará disponible en la siguiente entrega.</p>
-
       {% if not modelo.solo_completo %}
-        <a href="{% url 'catalogo:region' modelo.localidad.region.slug %}?vista=prendas" class="enlace-flecha">¿Solo necesitas una prenda? Ver prendas individuales →</a>
+        <br><a href="{% url 'catalogo:region' modelo.localidad.region.slug %}?vista=prendas" class="enlace-flecha">¿Solo necesitas una prenda? Ver prendas individuales →</a>
       {% endif %}
     {% else %}
       <p class="vacio">Este traje aún no tiene precios cargados.</p>

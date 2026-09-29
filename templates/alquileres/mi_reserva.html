@@ -1,0 +1,105 @@
+{# Archivo: templates/alquileres/mi_reserva.html #}
+{% extends "base.html" %}
+
+{% block titulo %}Mi reserva{% endblock %}
+{% block barra_reserva %}{% endblock %}
+
+{% block contenido %}
+<div class="contenedor seccion">
+  <h1>Mi reserva</h1>
+
+  {% if not lineas %}
+    <p class="vacio">Tu reserva está vacía. Elige un traje completo o prendas individuales en el catálogo.</p>
+    <a href="{% url 'core:inicio' %}#regiones" class="boton boton-naranja">Ver catálogo</a>
+  {% else %}
+  <div class="reserva-columnas">
+
+    <section>
+      <form method="post" action="{% url 'alquileres:cambiar_fecha' %}" class="caja fecha-evento">
+        {% csrf_token %}
+        <label>{{ form_fecha.fecha_evento.label }} {{ form_fecha.fecha_evento }}</label>
+        <button type="submit" class="boton boton-azul">{% if fecha_evento %}Cambiar fecha{% else %}Guardar fecha{% endif %}</button>
+      </form>
+      {% if fecha_retiro %}
+        <p class="nota">Retiro: <strong>{{ fecha_retiro|date:"l d/m/Y" }}</strong> · Devolución: <strong>{{ fecha_devolucion|date:"l d/m/Y" }}</strong></p>
+      {% endif %}
+
+      <ul class="lista-reserva">
+        {% for linea in lineas %}
+          <li class="linea-reserva">
+            {% if linea.foto %}
+              <img src="{{ linea.foto.url }}" alt="" class="linea-foto">
+            {% else %}
+              <div class="linea-foto sin-foto"></div>
+            {% endif %}
+            <div class="linea-texto">
+              <strong>{{ linea.nombre }}</strong>
+              <span class="tarjeta-detalle">{{ linea.detalle }} · talla {{ linea.talla_nombre }} × {{ linea.cantidad }}</span>
+              {% if fecha_evento %}
+                {% if linea.disponible %}
+                  <span class="estado-ok">Disponible para tu fecha</span>
+                {% else %}
+                  <span class="estado-error">No disponible para tu fecha: quítalo o cambia la fecha</span>
+                {% endif %}
+              {% endif %}
+            </div>
+            <div class="linea-derecha">
+              <span class="precio">${{ linea.subtotal }}</span>
+              <form method="post" action="{% url 'alquileres:quitar' linea.indice %}">
+                {% csrf_token %}
+                <button type="submit" class="boton-texto" aria-label="Quitar {{ linea.nombre }}">Quitar</button>
+              </form>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+      <a href="{% url 'core:inicio' %}#regiones" class="enlace-flecha">+ Seguir eligiendo</a>
+
+      <div class="caja resumen">
+        <div class="resumen-fila"><span>Total del alquiler</span><span>${{ resumen.subtotal }}</span></div>
+        {% if resumen.descuento %}
+          <div class="resumen-fila estado-ok"><span>Descuento por parejas</span><span>−${{ resumen.descuento }}</span></div>
+          <div class="resumen-fila"><span>Total con descuento</span><span>${{ resumen.total }}</span></div>
+        {% endif %}
+        <div class="resumen-fila resumen-destacado"><span>Pagas hoy para reservar ({{ resumen.porcentaje_anticipo }}%)</span><span>${{ resumen.anticipo }}</span></div>
+        <div class="resumen-fila"><span>Pagas al retirar</span><span>${{ resumen.saldo }}</span></div>
+        <div class="resumen-fila"><span>Garantía al retirar (se devuelve)</span><span>${{ resumen.garantia }}</span></div>
+        <p class="nota">La garantía se te devuelve completa al traer todo en buen estado.</p>
+      </div>
+    </section>
+
+    <section>
+      {% if not fecha_evento %}
+        <div class="caja"><p>Elige la fecha del evento para revisar la disponibilidad y completar tu reserva.</p></div>
+      {% elif not todo_disponible %}
+        <div class="caja"><p>Algunas prendas no están disponibles para tu fecha. Quítalas o cambia la fecha para continuar.</p></div>
+      {% else %}
+        <form method="post" action="{% url 'alquileres:enviar' %}" enctype="multipart/form-data" class="caja formulario-datos">
+          {% csrf_token %}
+          <h2>Tus datos</h2>
+          <p class="nota">No necesitas crear una cuenta.</p>
+          {% if datos_transferencia %}
+            <div class="caja-transferencia">
+              <strong>Transfiere ${{ resumen.anticipo }} a:</strong>
+              <p>{{ datos_transferencia|linebreaksbr }}</p>
+            </div>
+          {% endif %}
+          {% for campo in form_reserva %}
+            {% if campo.field.widget.input_type == "checkbox" %}
+              <label class="casilla">{{ campo }} <span>{{ campo.label }}</span></label>
+            {% else %}
+              <label>{{ campo.label }} {{ campo }}</label>
+              {% if campo.help_text %}<small class="nota">{{ campo.help_text }}</small>{% endif %}
+            {% endif %}
+            {% for error in campo.errors %}<small class="error">{{ error }}</small>{% endfor %}
+          {% endfor %}
+          <button type="submit" class="boton boton-naranja boton-ancho">Enviar reserva</button>
+          <p class="nota">Tu reserva queda pendiente hasta que validemos el comprobante.</p>
+        </form>
+      {% endif %}
+    </section>
+
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

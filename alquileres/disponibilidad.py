@@ -108,6 +108,32 @@ def asignar_unidades(alquiler):
         raise SinDisponibilidad("; ".join(faltantes))
 
 
+def _ordenar_tallas(tallas):
+    orden = [valor for valor, _ in UnidadInventario.Talla.choices]
+    return sorted(set(tallas), key=lambda talla: orden.index(talla) if talla in orden else len(orden))
+
+
+def tallas_de_variante(variante):
+    """Tallas en que existe el traje (sin contar accesorios de talla única)."""
+    tallas = (
+        UnidadInventario.objects.filter(prenda__variante=variante)
+        .exclude(estado__in=ESTADOS_NO_ALQUILABLES)
+        .exclude(talla=UnidadInventario.Talla.UNICA)
+        .values_list("talla", flat=True)
+    )
+    tallas = _ordenar_tallas(tallas)
+    return tallas or [UnidadInventario.Talla.UNICA]
+
+
+def tallas_de_diseno(diseno):
+    tallas = (
+        UnidadInventario.objects.filter(prenda=diseno.prenda, diseno=diseno)
+        .exclude(estado__in=ESTADOS_NO_ALQUILABLES)
+        .values_list("talla", flat=True)
+    )
+    return _ordenar_tallas(tallas)
+
+
 def liberar_unidades(alquiler):
     """Libera las prendas bloqueadas (por ejemplo, al cancelar)."""
     return AsignacionUnidad.objects.filter(linea__alquiler=alquiler, activa=True).update(activa=False)

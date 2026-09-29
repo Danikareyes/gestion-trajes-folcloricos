@@ -1,3 +1,4 @@
+{# Archivo: templates/base.html #}
 {% load static %}<!doctype html>
 <html lang="es">
 <head>
@@ -21,9 +22,20 @@
         <a href="{% url 'core:inicio' %}#regiones">Catálogo</a>
         <a href="{% url 'core:inicio' %}#eventos">Eventos</a>
         <a href="#contacto">Contacto</a>
+        <a href="{% url 'alquileres:mi_reserva' %}" class="enlace-reserva">
+          Mi reserva{% if CARRITO_CANTIDAD %} <span class="insignia">{{ CARRITO_CANTIDAD }}</span>{% endif %}
+        </a>
       </nav>
     </div>
   </header>
+
+  {% if messages %}
+    <div class="contenedor mensajes" role="status">
+      {% for mensaje in messages %}
+        <p class="mensaje mensaje-{{ mensaje.tags }}">{{ mensaje }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
 
   <main>
     {% block contenido %}{% endblock %}
@@ -40,5 +52,14 @@
       {% endif %}
     </div>
   </footer>
+
+  {% block barra_reserva %}
+    {% if CARRITO_CANTIDAD %}
+      <div class="barra-reserva">
+        <span><strong>Mi reserva</strong> · {{ CARRITO_CANTIDAD }} artículo{{ CARRITO_CANTIDAD|pluralize }}</span>
+        <a href="{% url 'alquileres:mi_reserva' %}" class="boton boton-maiz">Continuar</a>
+      </div>
+    {% endif %}
+  {% endblock %}
 </body>
 </html>

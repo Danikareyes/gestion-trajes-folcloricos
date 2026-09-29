@@ -1,3 +1,4 @@
+{# Archivo: templates/catalogo/region.html #}
 {% extends "base.html" %}
 
 {% block titulo %}{{ region.nombre }}{% endblock %}
@@ -82,7 +83,18 @@
             <span class="tarjeta-titulo">{{ d.prenda.nombre }} · {{ d.nombre }}</span>
             <span class="tarjeta-detalle">{{ d.prenda.variante.modelo.localidad.nombre }} · {{ d.prenda.variante.get_genero_display }}</span>
             <span class="precio">${{ d.prenda.precio_individual }}</span>
-            <button type="button" class="boton boton-naranja" disabled title="Disponible en la siguiente entrega">Agregar a mi reserva</button>
+            {% if d.form %}
+              <form method="post" action="{% url 'alquileres:agregar_prenda' d.pk %}" class="formulario-prenda">
+                {% csrf_token %}
+                <div class="campos-fila">
+                  <label>Talla {{ d.form.talla }}</label>
+                  <label>Cant. {{ d.form.cantidad }}</label>
+                </div>
+                <button type="submit" class="boton boton-naranja">Agregar</button>
+              </form>
+            {% else %}
+              <span class="nota">Sin unidades disponibles</span>
+            {% endif %}
           </div>
         </article>
       {% endfor %}

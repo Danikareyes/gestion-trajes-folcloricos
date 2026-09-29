@@ -149,6 +149,67 @@ a.tarjeta:hover { border-color: var(--naranja); color: var(--marino); }
 .lista-prendas { background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--radio); padding: 14px 16px; }
 .enlace-flecha { display: inline-block; margin-top: 16px; font-weight: 600; }
 
+/* Mi reserva en el menú */
+.menu { flex-wrap: wrap; }
+.enlace-reserva { display: inline-flex; align-items: center; gap: 6px; }
+.menu a.enlace-reserva { background: var(--naranja); color: var(--blanco); }
+.menu a.enlace-reserva:hover { background: var(--naranja-oscuro); }
+.insignia { background: var(--maiz); color: var(--marino); border-radius: 10px; padding: 0 7px; font-size: .8rem; font-weight: 600; }
+
+/* Mensajes */
+.mensajes { padding-top: 16px; }
+.mensaje { margin: 0 0 8px; padding: 12px 16px; border-radius: 10px; background: var(--blanco); border: 1px solid var(--borde); }
+.mensaje-success { background: #E3F2E8; border-color: #B7DFC4; color: #14532D; }
+.mensaje-error { background: #FDE8E8; border-color: #F5C2C2; color: #7F1D1D; }
+
+/* Formularios */
+.formulario-reserva, .formulario-datos { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.formulario-reserva label, .formulario-datos label, .fecha-evento label, .formulario-prenda label {
+  display: flex; flex-direction: column; gap: 4px; font-size: .85rem; font-weight: 600; color: var(--texto-suave); }
+.formulario-reserva input, .formulario-reserva select, .formulario-datos input:not([type="checkbox"]),
+.formulario-datos select, .fecha-evento input, .formulario-prenda select, .formulario-prenda input {
+  min-height: 44px; border: 1px solid var(--borde-campo); border-radius: 10px; padding: 0 10px;
+  background: var(--blanco); color: var(--marino); font: 1rem var(--texto); width: 100%; }
+.formulario-datos input[type="file"] { padding: 9px 10px; }
+.campos-fila { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.formulario-prenda { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+.casilla { flex-direction: row !important; align-items: flex-start; gap: 10px !important; font-weight: 400 !important; color: var(--marino) !important; }
+.casilla input { width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0; }
+.error { color: #B91C1C; font-weight: 600; }
+.boton-texto { background: none; border: none; color: var(--naranja); font: 600 .85rem var(--texto); cursor: pointer; padding: 8px 0; min-height: 44px; }
+
+/* Tabla de medidas */
+.tabla-desplazable { overflow-x: auto; margin-bottom: 20px; }
+.tabla-medidas { width: 100%; border-collapse: collapse; background: var(--blanco); border-radius: var(--radio); overflow: hidden; }
+.tabla-medidas th, .tabla-medidas td { padding: 10px 12px; text-align: center; border-bottom: 1px solid var(--borde); }
+.tabla-medidas th { background: #F7E6CF; font-size: .85rem; }
+
+/* Página Mi reserva */
+.caja { background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--radio); padding: 16px; margin-bottom: 16px; }
+.fecha-evento { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+.fecha-evento label { flex: 1 1 200px; }
+.reserva-columnas { display: grid; gap: 24px; }
+.lista-reserva { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 10px; }
+.linea-reserva { display: flex; gap: 12px; align-items: center; background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--radio); padding: 10px; }
+.linea-foto { width: 64px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.linea-texto { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.linea-derecha { display: flex; flex-direction: column; align-items: flex-end; }
+.estado-ok { color: var(--verde); font-weight: 600; font-size: .85rem; }
+.estado-error { color: #B91C1C; font-weight: 600; font-size: .85rem; }
+.resumen-fila { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; }
+.resumen-destacado { color: var(--naranja); font-weight: 600; font-size: 1.1rem; }
+.caja-transferencia { background: #EEF2FF; border-radius: 10px; padding: 12px 14px; }
+.caja-transferencia p { margin: 4px 0 0; }
+.confirmacion { max-width: 720px; }
+.confirmacion .boton { margin: 8px 8px 0 0; }
+.pasos { padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+
+/* Barra inferior de Mi reserva */
+.barra-reserva { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 20; background: var(--marino); color: var(--blanco);
+  border-radius: 16px; padding: 10px 12px 10px 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  box-shadow: 0 8px 24px rgba(27, 42, 74, .25); max-width: 560px; margin: 0 auto; }
+body:has(.barra-reserva) { padding-bottom: 84px; }
+
 /* Pie */
 .pie { background: var(--marino); color: #C9D2E6; margin-top: 40px; padding: 28px 0; }
 .pie-fila { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
@@ -166,6 +227,7 @@ a.tarjeta:hover { border-color: var(--naranja); color: var(--marino); }
   .rejilla-productos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
   .ficha { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: start; gap: 48px; }
   .ficha-foto { max-height: 720px; }
+  .reserva-columnas { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }
   .portada { padding: 64px 0; }
   .portada-fila:has(.portada-imagen) { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
   .seccion { padding-top: 44px; padding-bottom: 44px; }

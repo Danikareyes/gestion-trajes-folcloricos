@@ -132,3 +132,4 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 NOMBRE_NEGOCIO = env("NOMBRE_NEGOCIO", default="Trajes Folclóricos")
 WHATSAPP_NUMERO = env("WHATSAPP_NUMERO", default="")
+DATOS_TRANSFERENCIA = env("DATOS_TRANSFERENCIA", default="")

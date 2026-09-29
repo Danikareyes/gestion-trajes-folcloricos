@@ -1,3 +1,4 @@
+# Archivo: inventario/admin.py
 from django import forms
 from django.contrib import admin
 from django.utils.html import format_html
@@ -72,6 +73,8 @@ class UnidadInventarioAdmin(admin.ModelAdmin):
     inlines = [HistorialEstadoInline]
     fieldsets = [
         (None, {"fields": ["prenda", "diseno", "codigo", "talla", "condicion", "ubicacion"]}),
+        ("Medidas", {"fields": [("busto_cm", "cintura_cm", "cadera_cm", "largo_cm")],
+                     "description": "Llena solo las que apliquen a la prenda (ej.: una pollera no tiene busto)."}),
         ("Estado", {"fields": ["estado", "motivo_cambio"]}),
         ("Compra y notas", {"classes": ["collapse"],
                             "fields": ["fecha_adquisicion", "costo_adquisicion", "veces_alquilada", "notas"]}),
