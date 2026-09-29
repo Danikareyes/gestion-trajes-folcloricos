@@ -1,8 +1,18 @@
+# Archivo: catalogo/admin.py
+from django import forms
 from django.contrib import admin
+from django.db import models
 from django.urls import reverse
 from django.utils.html import format_html
 
 from .models import DisenoPrenda, Localidad, ModeloTraje, Prenda, Region, TipoPrenda, VarianteGenero
+
+
+class PasoCincuentaCentavos:
+    """Los precios y garantías suben o bajan de $0.50 en $0.50 con las flechas."""
+    formfield_overrides = {
+        models.DecimalField: {"widget": forms.NumberInput(attrs={"step": "0.50", "min": "0"})},
+    }
 
 
 @admin.register(Region)
@@ -24,7 +34,7 @@ class LocalidadAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ["nombre"]}
 
 
-class VarianteGeneroInline(admin.TabularInline):
+class VarianteGeneroInline(PasoCincuentaCentavos, admin.TabularInline):
     model = VarianteGenero
     extra = 1
     fields = ["genero", "precio_completo", "garantia_completo", "dias_buffer_lavado", "foto_principal", "editar_prendas"]
@@ -61,11 +71,11 @@ class TipoPrendaAdmin(admin.ModelAdmin):
     search_fields = ["nombre"]
 
 
-class PrendaInline(admin.TabularInline):
+class PrendaInline(PasoCincuentaCentavos, admin.TabularInline):
     model = Prenda
-    extra = 3
+    extra = 1
     fields = ["nombre", "tipo_prenda", "tipo", "precio_individual", "garantia_individual",
-              "incluida_sin_costo", "cantidad_por_traje", "foto", "editar_disenos"]
+              "incluida_sin_costo", "cantidad_por_traje", "editar_disenos"]
     readonly_fields = ["editar_disenos"]
 
     @admin.display(description="diseños")
@@ -77,7 +87,7 @@ class PrendaInline(admin.TabularInline):
 
 
 @admin.register(VarianteGenero)
-class VarianteGeneroAdmin(admin.ModelAdmin):
+class VarianteGeneroAdmin(PasoCincuentaCentavos, admin.ModelAdmin):
     list_display = ["__str__", "precio_completo", "suma_por_prendas", "garantia_completo", "total_prendas"]
     list_filter = ["genero", "modelo__localidad__region"]
     search_fields = ["modelo__nombre"]
@@ -97,7 +107,7 @@ class VarianteGeneroAdmin(admin.ModelAdmin):
 
 class DisenoPrendaInline(admin.TabularInline):
     model = DisenoPrenda
-    extra = 3
+    extra = 1
     fields = ["nombre", "foto", "vista_previa", "activo"]
     readonly_fields = ["vista_previa"]
 
@@ -109,10 +119,11 @@ class DisenoPrendaInline(admin.TabularInline):
 
 
 @admin.register(Prenda)
-class PrendaAdmin(admin.ModelAdmin):
+class PrendaAdmin(PasoCincuentaCentavos, admin.ModelAdmin):
     list_display = ["nombre", "tipo_prenda", "variante", "precio_individual", "total_disenos", "incluida_sin_costo"]
     list_filter = ["tipo_prenda", "tipo", "incluida_sin_costo", "variante__modelo__localidad__region"]
     search_fields = ["nombre", "variante__modelo__nombre"]
+    exclude = ["foto"]  # las fotos van en cada diseño; así no hay dos lugares para lo mismo
     inlines = [DisenoPrendaInline]
 
     @admin.display(description="n.º diseños")

@@ -1,3 +1,4 @@
+# Archivo: catalogo/models.py
 from decimal import Decimal
 
 from django.core.validators import MinValueValidator
@@ -149,7 +150,10 @@ class Prenda(models.Model):
     incluida_sin_costo = models.BooleanField(
         "incluida sin costo", default=False, help_text="Marca para collar y aretes que van gratis en el traje completo"
     )
-    cantidad_por_traje = models.PositiveSmallIntegerField("cantidad por traje", default=1)
+    cantidad_por_traje = models.PositiveSmallIntegerField(
+        "unidades por traje", default=1,
+        help_text="¿Cuántas de esta prenda lleva UN traje completo? Casi siempre 1 (ej.: 2 si lleva dos fajas iguales).",
+    )
     foto = models.ImageField(upload_to="prendas/", blank=True)
 
     class Meta:
@@ -165,7 +169,8 @@ class Prenda(models.Model):
 class DisenoPrenda(models.Model):
     prenda = models.ForeignKey(Prenda, on_delete=models.CASCADE, related_name="disenos")
     nombre = models.CharField(
-        "diseño o color", max_length=60, help_text="Ej.: Bordada fucsia, Blanca con encaje"
+        "diseño o color", max_length=60,
+        help_text="Cómo se distingue a la vista (ej.: Fucsia bordada). La talla no va aquí: se registra en Inventario.",
     )
     foto = models.ImageField(upload_to="disenos/", blank=True)
     activo = models.BooleanField(default=True, help_text="Desmarca para ocultarlo del catálogo")
